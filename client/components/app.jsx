@@ -16,9 +16,11 @@ export default class App extends React.Component {
   }
 
   setView(name, params) {
-    const stateCopy = { ...this.state.view };
-    stateCopy.name = name;
-    stateCopy.params = params;
+    let stateCopy = { ...this.state.view };
+    stateCopy = {
+      name,
+      params
+    };
     this.setState({ view: stateCopy });
   }
 
@@ -26,7 +28,7 @@ export default class App extends React.Component {
     return (
       <React.Fragment>
         <Header />
-        {this.state.view.name === 'details' ? <ProductDetails setView={this.setView} params={this.state.view.params}/> : <ProductList setView={this.setView}/>}
+        {this.state.view.name === 'details' ? <ProductDetails setView={this.setView} params={this.state.view.params} /> : <ProductList setView={this.setView} />}
       </React.Fragment>
     );
   }
