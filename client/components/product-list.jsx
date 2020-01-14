@@ -21,7 +21,7 @@ class ProductList extends React.Component {
   generateItems() {
     if (this.state.products.length > 0) {
       const productArray = this.state.products.map(index => {
-        return <ProductListItem product={index} key={index.productId} />;
+        return <ProductListItem product={index} key={index.productId} setView={this.props.setView}/>;
       });
       return productArray;
     }
