@@ -31,6 +31,7 @@ class ProductDetails extends React.Component {
             <h5>{product.name}</h5>
             <div>{product.price}</div>
             <div>{product.shortDescription}</div>
+            <button className="btn btn-primary" onClick={() => this.props.addToCart(this.state.product)}>Add to Cart</button>
           </div>
           <div className="col-12">{product.longDescription}</div>
         </div>
