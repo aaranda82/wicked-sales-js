@@ -62,16 +62,18 @@ app.get('/api/cart', (req, res, next) => {
                   where "c"."cartId" = $1`;
     const val = [req.session.cartId];
     db.query(sql, val)
-      .then(result => res.send(result.rows));
+      .then(result => res.send(result.rows))
+      .catch(err => next(err));
+
   }
 });
 
 app.post('/api/cart', (req, res, next) => {
   const productId = parseInt(req.body.productId);
   if (!productId) {
-    res.status(400).send('"productId" is required');
+    next(new ClientError('"productId" is required', 400));
   } else if (typeof productId !== 'number' || productId < 0) {
-    res.status(400).send('"productId" must be a positive number');
+    next(new ClientError('"productId" must be a positive number', 400));
   }
   const sql = `select "price"
                  from "products"
@@ -119,7 +121,7 @@ app.post('/api/cart', (req, res, next) => {
                      join "products" as "p" using ("productId")
                     where "c"."cartItemId" = $1`;
       const value = [result.rows[0].cartItemId];
-      db.query(sql, value)
+      return db.query(sql, value)
         .then(result => { res.status(201).send(result.rows[0]); });
     })
     .catch(err => next(err));
