@@ -12,7 +12,7 @@ function ProductListItem(props) {
   const product = props.product;
   const price = formatPrice(product.price);
   return (
-    <div className="card col-3 m-3">
+    <div className="card col-3 m-3" onClick={() => props.setView('details', product.productId)}>
       <img src= {product.image} alt={product.name} className="card-image-top" height="150vh" width="auto"/>
       <div className="card-body">
         <h5 className="card-title">{product.name}</h5>
