@@ -1,16 +1,9 @@
 import React from 'react';
 
-function formatPrice(price) {
-  price = ('$' + price);
-  price = price.split('');
-  price.splice(price.length - 2, 0, '.');
-  price = price.join('');
-  return price;
-}
-
 function ProductListItem(props) {
   const product = props.product;
-  const price = formatPrice(product.price);
+  let price = (product.price / 100).toFixed(2);
+  price = `$${price}`;
   return (
     <div className="card col-3 m-3" onClick={() => props.setView('details', product.productId)}>
       <img src= {product.image} alt={product.name} className="card-image-top" height="250vh"/>
