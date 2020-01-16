@@ -136,7 +136,7 @@ app.post('/api/orders', (req, res, next) => {
   } else if (!req.body.creditCard) {
     next(new ClientError('A credit card number is required'));
   } else if (!req.body.shippingAddress) {
-    next(new ClientError('A shipping address is required'));
+    return next(new ClientError('A shipping address is required'));
   }
   const sql = `insert into "orders" ("cartId", "name", "creditCard", "shippingAddress")
                     values ($1, $2, $3, $4)
