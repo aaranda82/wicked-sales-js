@@ -62,7 +62,7 @@ app.get('/api/cart', (req, res, next) => {
                   where "c"."cartId" = $1`;
     const val = [req.session.cartId];
     db.query(sql, val)
-      .then(result => res.send(result.rows))
+      .then(result => res.json(result.rows))
       .catch(err => next(err));
 
   }
@@ -122,7 +122,34 @@ app.post('/api/cart', (req, res, next) => {
                     where "c"."cartItemId" = $1`;
       const value = [result.rows[0].cartItemId];
       return db.query(sql, value)
-        .then(result => { res.status(201).send(result.rows[0]); });
+        .then(result => { res.status(201).json(result.rows[0]); });
+    })
+    .catch(err => next(err));
+});
+
+app.post('/api/orders', (req, res, next) => {
+  const cartId = req.session.cartId;
+  if (!cartId) {
+    next(new ClientError('no cart id stored', 400));
+  } else if (!req.body.name) {
+    next(new ClientError('A name is required'));
+  } else if (!req.body.creditCard) {
+    next(new ClientError('A credit card number is required'));
+  } else if (!req.body.shippingAddress) {
+    return next(new ClientError('A shipping address is required'));
+  }
+  const sql = `insert into "orders" ("cartId", "name", "creditCard", "shippingAddress")
+                    values ($1, $2, $3, $4)
+                 returning "createdAt",
+                           "creditCard",
+                           "name",
+                           "orderId",
+                           "shippingAddress"`;
+  const values = [cartId, req.body.name, req.body.creditCard, req.body.shippingAddress];
+  db.query(sql, values)
+    .then(response => {
+      delete req.session.cartId;
+      return res.status(201).json(response.rows[0]);
     })
     .catch(err => next(err));
 });
