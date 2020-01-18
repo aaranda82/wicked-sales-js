@@ -85,18 +85,14 @@ export default class App extends React.Component {
     fetch('/api/orders', placeOrderInit)
       .then(response => {
         response.json();
-        let stateCopy = { ...this.state };
-        stateCopy = {
+        return this.setState({
           view: {
             name: 'catalog',
             params: {}
           },
           cart: []
-        };
-        return this.setState({
-          view: stateCopy.view,
-          cart: stateCopy.cart
         });
+
       })
       .catch(err => console.error(err));
   }

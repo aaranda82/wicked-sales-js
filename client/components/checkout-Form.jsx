@@ -13,6 +13,11 @@ class CheckoutForm extends React.Component {
     this.handleAddress = this.handleAddress.bind(this);
   }
 
+  handleSubmit(event) {
+    event.preventDefault();
+    this.props.placeOrder(this.state);
+  }
+
   handleName(event) {
     this.setState({ name: event.target.value });
   }
@@ -27,7 +32,7 @@ class CheckoutForm extends React.Component {
 
   render() {
     return (
-      <div className="container">
+      <form onSubmit={() => this.handleSubmit() }>
         <div className="form-group">
           <label htmlFor="Name">Name</label>
           <input type="text" className="form-control" placeholder="Name" onChange={this.handleName} value={this.state.name} />
@@ -42,9 +47,9 @@ class CheckoutForm extends React.Component {
         </div>
         <div className="row">
           <div className="backbutton col-10" onClick={() => this.props.setView('catalog', {})}>{'<Back to catalog'}</div>
-          <button className="btn btn-primary col-2" onClick={() => this.props.placeOrder(this.state)}>Place Order</button>
+          <button type="submit" className="btn btn-primary col-2">Place Order</button>
         </div>
-      </div>
+      </form>
     );
   }
 }
