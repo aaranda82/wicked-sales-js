@@ -3,6 +3,7 @@ import Header from './header';
 import ProductList from './product-list';
 import ProductDetails from './product-details';
 import CartSummary from './cart-summary';
+import CheckoutForm from './checkout-Form';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -16,6 +17,7 @@ export default class App extends React.Component {
     };
     this.setView = this.setView.bind(this);
     this.addToCart = this.addToCart.bind(this);
+    this.placeOrder = this.placeOrder.bind(this);
   }
 
   componentDidMount() {
@@ -64,18 +66,43 @@ export default class App extends React.Component {
         domView = <ProductDetails setView={this.setView} addToCart={this.addToCart} params={this.state.view.params} />;
         break;
       case 'cart':
-        domView = <CartSummary cartItems={this.state.cart} setView={this.setView}/>;
+        domView = <CartSummary setView={this.setView} cartItems={this.state.cart} />;
         break;
+      case 'checkout':
+        domView = <CheckoutForm setView={this.setView} placeOrder={this.placeOrder} />;
     }
     return domView;
   }
 
+  placeOrder(info) {
+    const placeOrderInit = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(info)
+    };
+    fetch('/api/orders', placeOrderInit)
+      .then(response => {
+        response.json();
+        return this.setState({
+          view: {
+            name: 'catalog',
+            params: {}
+          },
+          cart: []
+        });
+
+      })
+      .catch(err => console.error(err));
+  }
+
   render() {
     return (
-      <React.Fragment>
-        <Header cartItemCount={this.state.cart.length} setView={this.setView}/>
+      <>
+        <Header cartItemCount={this.state.cart.length} setView={this.setView} />
         {this.handleRender()}
-      </React.Fragment>
+      </>
     );
   }
 }

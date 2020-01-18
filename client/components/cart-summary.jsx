@@ -11,14 +11,15 @@ function CartSummary(props) {
     cartTotal = (cartTotal / 100).toFixed(2);
     cartTotal = `$${cartTotal}`;
     return (
-      <React.Fragment>
+      <>
         <div className="backbutton col-12" onClick={() => props.setView('catalog', {})}>{'<Back to catalog'}</div>
         <h1>My Cart</h1>
         <div className="container">
           {cartItemArr}
         </div>
         <h3>{`Cart Total: ${cartTotal}`}</h3>
-      </React.Fragment>
+        <button className="btn btn-primary col-2" onClick={() => props.setView('checkout', {})}>checkout</button>
+      </>
     );
   }
 }
