@@ -1,7 +1,7 @@
 import React from 'react';
+import styled from 'styled-components';
 import ProductListItem from './product-list-item';
 import { ColorScheme } from '../ColorScheme';
-import styled from 'styled-components';
 
 class ProductList extends React.Component {
   constructor(props) {
@@ -16,7 +16,7 @@ class ProductList extends React.Component {
   getProducts() {
     fetch('/api/products')
       .then(response => response.json())
-      .then(products => this.setState({ products: products }))
+      .then(products => this.setState({ products }))
       .catch(err => console.error(err));
   }
 
@@ -37,7 +37,8 @@ class ProductList extends React.Component {
 
   render() {
     const Container = styled.div`
-    background-color: ${ColorScheme.black}`;
+      background-color: ${ColorScheme.black};
+    `;
     return (
       <Container className="conatiner">
         <div className="row justify-content-center">{this.generateItems()}</div>
