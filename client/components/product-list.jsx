@@ -37,7 +37,7 @@ class ProductList extends React.Component {
 
   render() {
     const Container = styled.div`
-      background-color: ${ColorScheme.black};
+      background-color: ${ColorScheme.lightGrey};
     `;
     return (
       <Container className="conatiner">

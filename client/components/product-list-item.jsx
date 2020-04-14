@@ -5,14 +5,21 @@ import styled from 'styled-components';
 function ProductListItem(props) {
   const { price, productId, image, name, shortDescription } = props.product;
   const priceFormatted = `$${(price / 100).toFixed(2)}`;
-  const { lightGreen } = ColorScheme;
+  const { lightGrey, lightBlue } = ColorScheme;
   const Item = styled.div`
-    background-color: ${lightGreen};
+    background-color: ${lightGrey};
+    cursor: pointer;
+    border: none;
+
+    &:hover{
+      background-color: ${lightBlue};
+    }
   `;
   return (
     <Item
       className="card col-3 m-3"
       onClick={() => props.setView('details', productId)}
+      title={name}
     >
       <img src={image} alt={name} className="card-image-top" height="250vh" />
       <div className="card-body">
