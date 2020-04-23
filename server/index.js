@@ -70,6 +70,7 @@ app.get('/api/cart', (req, res, next) => {
 
 app.post('/api/cart', (req, res, next) => {
   const productId = parseInt(req.body.productId);
+  let { cartId } = req.session;
   if (!productId) {
     next(new ClientError('"productId" is required', 400));
   } else if (typeof productId !== 'number' || productId < 0) {
@@ -83,9 +84,9 @@ app.post('/api/cart', (req, res, next) => {
     .then(data => {
       if (data.rows.length === 0) {
         throw new ClientError(`cannot find productId ${productId}`, 400);
-      } else if (req.session.cartId) {
+      } else if (cartId) {
         return {
-          cartId: req.session.cartId,
+          cartId: cartId,
           price: data.rows[0].price
         };
       } else {
@@ -102,11 +103,11 @@ app.post('/api/cart', (req, res, next) => {
       }
     })
     .then(result => {
-      req.session.cartId = result.cartId;
+      cartId = result.cartId;
       const sql = `insert into "cartItems" ("cartId", "productId", "price")
                         values ($1, $2, $3)
                      returning "cartItemId"`;
-      const values = [result.cartId, productId, result.price];
+      const values = [cartId, productId, result.price];
       return db.query(sql, values);
 
     })

@@ -9,5 +9,6 @@ export const ColorScheme = {
   red: '#ee5253',
   lightRed: '#ff6b6b',
   orange: '#ff9f43',
-  yellow: '#feca57'
+  yellow: '#feca57',
+  white: '#f5f6fa'
 };

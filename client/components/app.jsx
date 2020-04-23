@@ -25,12 +25,12 @@ export default class App extends React.Component {
   }
 
   setView(name, params) {
-    let stateCopy = { ...this.state.view };
-    stateCopy = {
+    let view = { ...this.state.view };
+    view = {
       name,
       params
     };
-    this.setState({ view: stateCopy });
+    this.setState({ view });
   }
 
   getCartItems() {

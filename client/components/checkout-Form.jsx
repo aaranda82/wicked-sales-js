@@ -1,4 +1,6 @@
 import React from 'react';
+import styled from 'styled-components';
+import { ColorScheme } from '../ColorScheme';
 
 class CheckoutForm extends React.Component {
   constructor(props) {
@@ -31,6 +33,13 @@ class CheckoutForm extends React.Component {
   }
 
   render() {
+    const Back = styled.div`
+    cursor: pointer;
+
+    &:hover{
+      color: ${ColorScheme.green}
+    }
+    `;
     return (
       <form onSubmit={() => this.handleSubmit() }>
         <div className="form-group">
@@ -46,7 +55,7 @@ class CheckoutForm extends React.Component {
           <textarea name="Address" className="form-control" id="Address" cols="20" rows="8" onChange={this.handleAddress} value={this.state.address}></textarea>
         </div>
         <div className="row">
-          <div className="backbutton col-10" onClick={() => this.props.setView('catalog', {})}>{'<Back to catalog'}</div>
+          <Back className="backbutton col-10" onClick={() => this.props.setView('catalog', {})}>{'<Back to catalog'}</Back>
           <button type="submit" className="btn btn-primary col-2">Place Order</button>
         </div>
       </form>

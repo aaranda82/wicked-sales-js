@@ -1,19 +1,18 @@
 import React from 'react';
 
 function CartSummaryItem(props) {
-  const product = props.product;
-  let price = (product.price / 100).toFixed(2);
-  price = `$${price}`;
+  const { price, image, name, shortDescription } = props.product;
+  const priceMod = `$${(price / 100).toFixed(2)}`;
   return (
     <div className="card mb-3">
       <div className="row">
         <div className="col-4">
-          <img src={product.image} alt={product.name} className="mx-auto d-block" height="150vh"/>
+          <img src={image} alt={name} className="mx-auto d-block" height="150vh"/>
         </div>
         <div className="col-6">
-          <h5>{product.name}</h5>
-          <div>{price}</div>
-          <div>{product.shortDescription}</div>
+          <h5>{name}</h5>
+          <div>{priceMod}</div>
+          <div>{shortDescription}</div>
         </div>
       </div>
     </div>

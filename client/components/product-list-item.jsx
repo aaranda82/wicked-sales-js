@@ -5,14 +5,14 @@ import styled from 'styled-components';
 function ProductListItem(props) {
   const { price, productId, image, name, shortDescription } = props.product;
   const priceFormatted = `$${(price / 100).toFixed(2)}`;
-  const { lightGrey, lightBlue } = ColorScheme;
+  const { lightGrey, grey } = ColorScheme;
   const Item = styled.div`
     background-color: ${lightGrey};
     cursor: pointer;
     border: none;
 
     &:hover{
-      background-color: ${lightBlue};
+      box-shadow: 0px 0px 15px 10px ${grey};
     }
   `;
   return (
