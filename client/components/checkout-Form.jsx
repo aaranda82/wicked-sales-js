@@ -34,11 +34,13 @@ class CheckoutForm extends React.Component {
 
   render() {
     const Back = styled.div`
-    cursor: pointer;
+      cursor: pointer;
+      font-size: 40px;
+      color: ${ColorScheme.red};
 
-    &:hover{
-      color: ${ColorScheme.green}
-    }
+      &:hover{
+        color: ${ColorScheme.green}
+      }
     `;
     return (
       <form onSubmit={() => this.handleSubmit() }>
@@ -55,7 +57,7 @@ class CheckoutForm extends React.Component {
           <textarea name="Address" className="form-control" id="Address" cols="20" rows="8" onChange={this.handleAddress} value={this.state.address}></textarea>
         </div>
         <div className="row">
-          <Back className="backbutton col-10" onClick={() => this.props.setView('catalog', {})}>{'<Back to catalog'}</Back>
+          <Back title='Back to Catalog' className="fas fa-arrow-circle-left" onClick={() => this.props.setView('catalog', {})}></Back>
           <button type="submit" className="btn btn-primary col-2">Place Order</button>
         </div>
       </form>

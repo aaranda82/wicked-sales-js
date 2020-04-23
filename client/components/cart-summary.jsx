@@ -6,16 +6,17 @@ import { ColorScheme } from '../ColorScheme';
 function CartSummary(props) {
   const cartItems = props.cartItems;
   const Back = styled.div`
-    cursor: pointer;
+  cursor: pointer;
+  font-size: 40px;
+  color: ${ColorScheme.red};
 
-    &:hover{
-      color: ${ColorScheme.green}
-    }
-  `;
+  &:hover{
+    color: ${ColorScheme.green}
+  }`;
   if (cartItems.length === 0) {
     return (
       <>
-        <Back className="backbutton col-12" onClick={() => props.setView('catalog', {})}>{'<Back to catalog'}</Back>
+        <Back title='Back to Catalog' className="fas fa-arrow-circle-left" onClick={() => props.setView('catalog', {})}></Back>
         <h5>Cart Empty</h5>
       </>
     );
@@ -26,7 +27,7 @@ function CartSummary(props) {
     cartTotal = `$${cartTotal}`;
     return (
       <>
-        <Back className="backbutton col-12" onClick={() => props.setView('catalog', {})}>{'<Back to catalog'}</Back>
+        <Back title='Back to Catalog' className="fas fa-arrow-circle-left" onClick={() => props.setView('catalog', {})}></Back>
         <h1>My Cart</h1>
         <div className="container">
           {cartItemArr}

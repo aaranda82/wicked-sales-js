@@ -34,7 +34,7 @@ class ProductDetails extends React.Component {
 
     &:hover{
       color: ${ColorScheme.green}
-    }    `;
+    }`;
     const ProductDetailPage = styled.div`
       display: flex;
       flex-wrap: warp;
