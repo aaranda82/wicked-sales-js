@@ -2,19 +2,21 @@ import React from 'react';
 import { ColorScheme } from '../ColorScheme';
 import styled from 'styled-components';
 
+const { lightGrey, grey } = ColorScheme;
+
+const Item = styled.div`
+  background-color: ${lightGrey};
+  cursor: pointer;
+  border: none;
+
+  &:hover {
+    box-shadow: 0px 0px 15px 10px ${grey};
+  }
+`;
+
 function ProductListItem(props) {
   const { price, productId, image, name, shortDescription } = props.product;
   const priceFormatted = `$${(price / 100).toFixed(2)}`;
-  const { lightGrey, grey } = ColorScheme;
-  const Item = styled.div`
-    background-color: ${lightGrey};
-    cursor: pointer;
-    border: none;
-
-    &:hover{
-      box-shadow: 0px 0px 15px 10px ${grey};
-    }
-  `;
   return (
     <Item
       className="card col-3 m-3"

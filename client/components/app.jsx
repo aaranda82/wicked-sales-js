@@ -20,9 +20,9 @@ export default class App extends React.Component {
     this.placeOrder = this.placeOrder.bind(this);
   }
 
-  componentDidMount() {
-    this.getCartItems();
-  }
+  // componentDidMount() {
+  //   this.getCartItems();
+  // }
 
   setView(name, params) {
     let view = { ...this.state.view };
@@ -33,11 +33,12 @@ export default class App extends React.Component {
     this.setState({ view });
   }
 
-  getCartItems() {
-    fetch('/api/cart')
-      .then(response => response.json())
-      .catch(err => console.error(err));
-  }
+  // getCartItems() {
+  //   fetch("/api/cart")
+  //     .then((response) => response.json())
+  //     .then((result) => console.log(result))
+  //     .catch((err) => console.error(err));
+  // }
 
   addToCart(product) {
     const addToCartInit = {
@@ -63,13 +64,23 @@ export default class App extends React.Component {
         domView = <ProductList setView={this.setView} />;
         break;
       case 'details':
-        domView = <ProductDetails setView={this.setView} addToCart={this.addToCart} params={this.state.view.params} />;
+        domView = (
+          <ProductDetails
+            setView={this.setView}
+            addToCart={this.addToCart}
+            params={this.state.view.params}
+          />
+        );
         break;
       case 'cart':
-        domView = <CartSummary setView={this.setView} cartItems={this.state.cart} />;
+        domView = (
+          <CartSummary setView={this.setView} cartItems={this.state.cart} />
+        );
         break;
       case 'checkout':
-        domView = <CheckoutForm setView={this.setView} placeOrder={this.placeOrder} />;
+        domView = (
+          <CheckoutForm setView={this.setView} placeOrder={this.placeOrder} />
+        );
     }
     return domView;
   }
@@ -92,7 +103,6 @@ export default class App extends React.Component {
           },
           cart: []
         });
-
       })
       .catch(err => console.error(err));
   }

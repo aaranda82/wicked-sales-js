@@ -3,6 +3,10 @@ import styled from 'styled-components';
 import ProductListItem from './product-list-item';
 import { ColorScheme } from '../ColorScheme';
 
+const Container = styled.div`
+  background-color: ${ColorScheme.lightGrey};
+`;
+
 class ProductList extends React.Component {
   constructor(props) {
     super(props);
@@ -36,9 +40,6 @@ class ProductList extends React.Component {
   }
 
   render() {
-    const Container = styled.div`
-      background-color: ${ColorScheme.lightGrey};
-    `;
     return (
       <Container className="conatiner">
         <div className="row justify-content-center">{this.generateItems()}</div>
