@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { ColorScheme } from '../ColorScheme';
 
-const { red, green, lightGrey } = ColorScheme;
+const { red, green } = ColorScheme;
 
 const Back = styled.div`
   cursor: pointer;
@@ -20,7 +20,6 @@ const ProductDetailPage = styled.div`
   display: flex;
   flex-wrap: warp;
   justify-content: center;
-  background: ${lightGrey};
 `;
 const Content = styled.div`
   width: 80%;

@@ -3,22 +3,22 @@ import styled from 'styled-components';
 import { ColorScheme } from '../ColorScheme';
 
 const Nav = styled.nav`
-  background: ${ColorScheme.grey};
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  background-color: ${ColorScheme.accent};
 `;
 const Logo = styled.div`
-  color: ${ColorScheme.white};
   width: 60%;
   font-size: 40px;
 `;
 const Cart = styled.div`
   cursor: pointer;
-  color: ${ColorScheme.white};
   width: 19%;
   text-align: right;
-
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
   &:hover {
     color: ${ColorScheme.green};
   }
