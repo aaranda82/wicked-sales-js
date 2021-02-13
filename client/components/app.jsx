@@ -1,9 +1,15 @@
 import React from 'react';
+import styled from 'styled-components';
 import Header from './header';
 import ProductList from './product-list';
 import ProductDetails from './product-details';
 import CartSummary from './cart-summary';
 import CheckoutForm from './checkout-Form';
+
+const Main = styled.div`
+  width: 80%;
+  margin: auto;
+`;
 
 export default class App extends React.Component {
   constructor(props) {
@@ -111,7 +117,7 @@ export default class App extends React.Component {
     return (
       <>
         <Header cartItemCount={this.state.cart.length} setView={this.setView} />
-        {this.handleRender()}
+        <Main>{this.handleRender()}</Main>
       </>
     );
   }

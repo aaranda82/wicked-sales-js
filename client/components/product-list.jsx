@@ -1,11 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import ProductListItem from './product-list-item';
-import { ColorScheme } from '../ColorScheme';
 
-const Container = styled.div`
-  background-color: ${ColorScheme.lightGrey};
-`;
+const Container = styled.div``;
 
 class ProductList extends React.Component {
   constructor(props) {

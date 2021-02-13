@@ -61,7 +61,7 @@ class CheckoutForm extends React.Component {
           <input
             type="text"
             className="form-control"
-            placeholder="Credit Card #"
+            placeholder="Do Not Use Real Credit Card Info"
             onChange={this.handleCreditCard}
             value={this.state.creditCard}
           />

@@ -2,15 +2,18 @@ import React from 'react';
 import { ColorScheme } from '../ColorScheme';
 import styled from 'styled-components';
 
-const { lightGrey, grey } = ColorScheme;
+const { accent } = ColorScheme;
 
 const Item = styled.div`
-  background-color: ${lightGrey};
   cursor: pointer;
-  border: none;
-
+  border: 1px solid lightgrey;
+  transition: all ease 0.2s;
+  background-color: ${accent};
+  padding: 0;
   &:hover {
-    box-shadow: 0px 0px 15px 10px ${grey};
+    z-index: 1;
+    position: relative;
+    transform: scale(1.05);
   }
 `;
 
@@ -23,7 +26,13 @@ function ProductListItem(props) {
       onClick={() => props.setView('details', productId)}
       title={name}
     >
-      <img src={image} alt={name} className="card-image-top" height="250vh" />
+      <img
+        src={image}
+        alt={name}
+        className="card-image-top"
+        height="250vh"
+        style={{ borderRadius: '5px' }}
+      />
       <div className="card-body">
         <h5 className="card-title">{name}</h5>
         <div>{priceFormatted}</div>
