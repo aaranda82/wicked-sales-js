@@ -1,6 +1,6 @@
-import React from 'react';
-import styled from 'styled-components';
-import { ColorScheme } from '../ColorScheme';
+import React from "react";
+import styled from "styled-components";
+import { ColorScheme } from "../ColorScheme";
 
 const Nav = styled.nav`
   display: flex;
@@ -24,12 +24,16 @@ const Cart = styled.div`
   }
 `;
 
-function Header(props) {
-  const { setView, cartItemCount } = props;
+interface IProps {
+  setView: (name: string, params: number | null) => void;
+  cartItemCount: number;
+}
+
+function Header({ setView, cartItemCount }: IProps) {
   return (
     <Nav>
-      <Logo>$ Wicked Sales</Logo>
-      <Cart onClick={() => setView('cart', {})}>
+      <Logo>E-Commerce Site</Logo>
+      <Cart onClick={() => setView("cart", null)}>
         {cartItemCount} items <i className="fas fa-shopping-cart"></i>
       </Cart>
     </Nav>

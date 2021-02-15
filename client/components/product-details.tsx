@@ -1,6 +1,6 @@
-import React from 'react';
-import styled from 'styled-components';
-import { ColorScheme } from '../ColorScheme';
+import React, { Component } from "react";
+import styled from "styled-components";
+import { ColorScheme } from "../ColorScheme";
 
 const { red, green } = ColorScheme;
 
@@ -52,22 +52,31 @@ const Price = styled.div`
   font-size: 40px;
 `;
 
-class ProductDetails extends React.Component {
-  constructor(props) {
+interface IProps {
+  params: any;
+  setView: (name: string, params: number | null) => void;
+  addToCart: any;
+}
+
+interface IState {
+  product: any;
+}
+
+class ProductDetails extends Component<IProps, IState> {
+  constructor(props: IProps) {
     super(props);
     this.state = {
-      product: null
+      product: null,
     };
   }
 
   componentDidMount() {
     fetch(`/api/products/${this.props.params}`)
-      .then(response => response.json())
-      .then(product => {
-        let price = '$' + product.price;
-        price = price.split('');
-        price.splice(price.length - 2, 0, '.');
-        product.price = price.join('');
+      .then((response) => response.json())
+      .then((product) => {
+        const price = ("$" + product.price).split("");
+        price.splice(price.length - 2, 0, ".");
+        product.price = price.join("");
         return this.setState({ product });
       });
   }
@@ -84,8 +93,7 @@ class ProductDetails extends React.Component {
             <Back
               title="Back to Catalog"
               className="fas fa-arrow-circle-left"
-              onClick={() => setView('catalog', {})}
-            ></Back>
+              onClick={() => setView("catalog", null)}></Back>
             <Image src={image} alt={name} />
             <BasicInfo>
               <Name>{name}</Name>
@@ -95,8 +103,7 @@ class ProductDetails extends React.Component {
               <Info>{shortDescription}</Info>
               <button
                 className="btn btn-primary"
-                onClick={() => addToCart(product)}
-              >
+                onClick={() => addToCart(product)}>
                 Add to Cart
               </button>
             </BasicInfo>

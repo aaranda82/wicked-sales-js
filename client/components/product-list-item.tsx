@@ -1,6 +1,6 @@
-import React from 'react';
-import { ColorScheme } from '../ColorScheme';
-import styled from 'styled-components';
+import React from "react";
+import { ColorScheme } from "../ColorScheme";
+import styled from "styled-components";
 
 const { accent } = ColorScheme;
 
@@ -17,25 +17,35 @@ const Item = styled.div`
   }
 `;
 
-function ProductListItem(props) {
-  const { price, productId, image, name, shortDescription } = props.product;
-  const priceFormatted = `$${(price / 100).toFixed(2)}`;
+interface IProps {
+  product: {
+    image: string;
+    name: string;
+    price: number;
+    productId: number;
+    shortDescription: string;
+  };
+  setView: (name: string, params: number | null) => void;
+}
+
+function ProductListItem({ product, setView }: IProps) {
+  const { price, productId, image, name, shortDescription } = product;
+  const formattedPrice = `$${(price / 100).toFixed(2)}`;
   return (
     <Item
       className="card col-3 m-3"
-      onClick={() => props.setView('details', productId)}
-      title={name}
-    >
+      onClick={() => setView("details", productId)}
+      title={name}>
       <img
         src={image}
         alt={name}
         className="card-image-top"
         height="250vh"
-        style={{ borderRadius: '5px' }}
+        style={{ borderRadius: "5px" }}
       />
       <div className="card-body">
         <h5 className="card-title">{name}</h5>
-        <div>{priceFormatted}</div>
+        <div>{formattedPrice}</div>
         <p className="card-text">{shortDescription}</p>
       </div>
     </Item>

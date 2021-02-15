@@ -1,6 +1,6 @@
-import React from 'react';
-import styled from 'styled-components';
-import { ColorScheme } from '../ColorScheme';
+import React from "react";
+import styled from "styled-components";
+import { ColorScheme } from "../ColorScheme";
 
 const Card = styled.div`
   background-color: ${ColorScheme.accent};
@@ -13,8 +13,8 @@ const Container = styled.div`
   flex-wrap: wrap;
 `;
 
-const Sub = styled(Container)`
-  width: ${props => props.width};
+const Sub = styled(Container)<{ width: string }>`
+  width: ${(props) => props.width};
   justify-content: space-evenly;
   @media screen and (max-width: 700px) {
     width: 100%;
@@ -31,8 +31,18 @@ const H5 = styled.h5`
   width: 30%;
 `;
 
-function CartSummaryItem(props) {
-  const { price, image, name, shortDescription } = props.product;
+interface IProps {
+  product: {
+    image: string;
+    name: string;
+    price: number;
+    productId: number;
+    shortDescription: string;
+  };
+}
+
+function CartSummaryItem({ product }: IProps) {
+  const { price, image, name, shortDescription } = product;
   const priceMod = `$${(price / 100).toFixed(2)}`;
   return (
     <Card>

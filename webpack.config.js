@@ -1,42 +1,43 @@
-require('dotenv/config');
-const path = require('path');
+require("dotenv/config");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const path = require("path");
 
-const clientPath = path.join(__dirname, 'client/');
-const publicPath = path.join(__dirname, 'server/public/');
+const clientPath = path.join(__dirname, "client/");
+const publicPath = path.join(__dirname, "server/public/");
 
 module.exports = {
   resolve: {
-    extensions: ['.js', '.jsx']
+    extensions: [".tsx", ".ts", ".js"],
   },
   entry: clientPath,
   output: {
-    path: publicPath
+    path: publicPath,
   },
   module: {
     rules: [
       {
-        test: /\.jsx/,
+        test: /\.tsx?$/,
+        use: "ts-loader",
+        exclude: /node_modules/,
         use: {
-          loader: 'babel-loader',
+          loader: "babel-loader",
           options: {
-            plugins: [
-              '@babel/plugin-transform-react-jsx'
-            ]
-          }
-        }
-      }
-    ]
+            plugins: ["@babel/plugin-transform-react-jsx"],
+          },
+        },
+      },
+    ],
   },
-  devtool: 'source-map',
+  devtool: "source-map",
   devServer: {
     contentBase: publicPath,
     historyApiFallback: true,
-    host: '0.0.0.0',
+    host: "0.0.0.0",
     port: process.env.DEV_SERVER_PORT,
     proxy: {
-      '/api': `http://localhost:${process.env.PORT}`
+      "/api": `http://localhost:${process.env.PORT}`,
     },
-    stats: 'minimal',
-    watchContentBase: true
-  }
+    stats: "minimal",
+    watchContentBase: true,
+  },
 };
