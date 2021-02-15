@@ -1,7 +1,7 @@
-import React from 'react';
-import CartSummaryItem from './cart-summary-item';
-import styled from 'styled-components';
-import { ColorScheme } from '../ColorScheme';
+import React from "react";
+import CartSummaryItem from "./cart-summary-item";
+import styled from "styled-components";
+import { ColorScheme } from "../ColorScheme";
 
 const { red, green } = ColorScheme;
 
@@ -15,16 +15,25 @@ const Back = styled.div`
   }
 `;
 
-function CartSummary(props) {
-  const { cartItems } = props;
+interface IProps {
+  setView: (name: string, params: number | null) => void;
+  cartItems: {
+    image: string;
+    name: string;
+    price: number;
+    productId: number;
+    shortDescription: string;
+  }[];
+}
+
+function CartSummary({ setView, cartItems }: IProps) {
   if (!cartItems.length) {
     return (
       <>
         <Back
           title="Back to Catalog"
           className="fas fa-arrow-circle-left"
-          onClick={() => props.setView('catalog', {})}
-        ></Back>
+          onClick={() => setView("catalog", null)}></Back>
         <h5>Cart Empty</h5>
       </>
     );
@@ -32,22 +41,20 @@ function CartSummary(props) {
     const cartItemArr = cartItems.map((i, key) => (
       <CartSummaryItem product={i} key={key} />
     ));
-    let cartTotal = cartItems.reduce((acc, cur) => acc + cur.price, 0);
-    cartTotal = `$${(cartTotal / 100).toFixed(2)}`;
+    const cartTotal = cartItems.reduce((acc, cur) => acc + cur.price, 0);
+    const total = `$${(cartTotal / 100).toFixed(2)}`;
     return (
       <>
         <Back
           title="Back to Catalog"
           className="fas fa-arrow-circle-left"
-          onClick={() => props.setView('catalog', {})}
-        ></Back>
+          onClick={() => setView("catalog", null)}></Back>
         <h1>My Cart</h1>
         <div className="container">{cartItemArr}</div>
-        <h3>{`Cart Total: ${cartTotal}`}</h3>
+        <h3>{`Cart Total: ${total}`}</h3>
         <button
           className="btn btn-primary col-2"
-          onClick={() => props.setView('checkout', {})}
-        >
+          onClick={() => setView("checkout", null)}>
           checkout
         </button>
       </>

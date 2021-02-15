@@ -1,6 +1,6 @@
-import React from 'react';
-import styled from 'styled-components';
-import { ColorScheme } from '../ColorScheme';
+import React, { Component } from "react";
+import styled from "styled-components";
+import { ColorScheme } from "../ColorScheme";
 
 const { red, green } = ColorScheme;
 
@@ -13,39 +13,51 @@ const Back = styled.div`
     color: ${green};
   }
 `;
-class CheckoutForm extends React.Component {
-  constructor(props) {
+
+interface IProps {
+  placeOrder: any;
+  setView: (name: string, params: number | null) => void;
+}
+
+interface IState {
+  name: string;
+  creditCard: string;
+  shippingAddress: string;
+}
+
+class CheckoutForm extends Component<IProps, IState> {
+  constructor(props: IProps) {
     super(props);
     this.state = {
-      name: '',
-      creditCard: '',
-      shippingAddress: ''
+      name: "",
+      creditCard: "",
+      shippingAddress: "",
     };
     this.handleName = this.handleName.bind(this);
     this.handleCreditCard = this.handleCreditCard.bind(this);
     this.handleAddress = this.handleAddress.bind(this);
   }
 
-  handleSubmit(event) {
-    event.preventDefault();
+  handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
     this.props.placeOrder(this.state);
   }
 
-  handleName(event) {
-    this.setState({ name: event.target.value });
+  handleName(e: React.ChangeEvent<HTMLInputElement>) {
+    this.setState({ name: e.target.value });
   }
 
-  handleCreditCard(event) {
-    this.setState({ creditCard: event.target.value });
+  handleCreditCard(e: React.ChangeEvent<HTMLInputElement>) {
+    this.setState({ creditCard: e.target.value });
   }
 
-  handleAddress(event) {
-    this.setState({ shippingAddress: event.target.value });
+  handleAddress(e: React.ChangeEvent<HTMLTextAreaElement>) {
+    this.setState({ shippingAddress: e.target.value });
   }
 
   render() {
     return (
-      <form onSubmit={() => this.handleSubmit()}>
+      <form onSubmit={this.handleSubmit}>
         <div className="form-group">
           <label htmlFor="Name">Name</label>
           <input
@@ -72,18 +84,16 @@ class CheckoutForm extends React.Component {
             name="Address"
             className="form-control"
             id="Address"
-            cols="20"
-            rows="8"
+            cols={20}
+            rows={8}
             onChange={this.handleAddress}
-            value={this.state.address}
-          ></textarea>
+            value={this.state.shippingAddress}></textarea>
         </div>
         <div className="row">
           <Back
             title="Back to Catalog"
             className="fas fa-arrow-circle-left"
-            onClick={() => this.props.setView('catalog', {})}
-          ></Back>
+            onClick={() => this.props.setView("catalog", null)}></Back>
           <button type="submit" className="btn btn-primary col-2">
             Place Order
           </button>
