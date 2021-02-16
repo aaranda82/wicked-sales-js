@@ -20,6 +20,7 @@ app.get("/api/health-check", (req, res, next) => {
     .catch((err) => next(err));
 });
 
+// Get all products
 app.get("/api/products", (req, res, next) => {
   const sql = `select "productId",
                       "name",
@@ -32,6 +33,7 @@ app.get("/api/products", (req, res, next) => {
     .catch((err) => next(err));
 });
 
+// Get product details
 app.get("/api/products/:productId", (req, res, next) => {
   const sql = `select *
                  from "products"
@@ -50,6 +52,9 @@ app.get("/api/products/:productId", (req, res, next) => {
     .catch((err) => next(err));
 });
 
+///
+///
+/// !!!!! API not in use
 app.get("/api/cart", (req, res, next) => {
   if (!req.session.cartId) {
     return res.json([]);
@@ -70,45 +75,47 @@ app.get("/api/cart", (req, res, next) => {
   }
 });
 
+// Add prodcut to cart
 app.post("/api/cart", (req, res, next) => {
-  const productId = parseInt(req.body.productId);
-  let { cartId } = req.session;
+  const { productId } = req.body;
   if (!productId) {
     next(new ClientError('"productId" is required', 400));
   } else if (typeof productId !== "number" || productId < 0) {
     next(new ClientError('"productId" must be a positive number', 400));
   }
+
   const sql = `select "price"
-                 from "products"
-                where "productId" = $1`;
+  from "products"
+  where "productId" = $1`;
   const val = [productId];
   db.query(sql, val)
-    .then((data) => {
-      if (data.rows.length === 0) {
-        throw new ClientError(`cannot find productId ${productId}`, 400);
-      } else if (cartId) {
+    .then((first) => {
+      if (first.rows.length === 0) {
+        throw new ClientError(`Cannot find productId ${productId}`, 400);
+      } else if (req.session.cartId) {
         return {
-          cartId: cartId,
-          price: data.rows[0].price,
+          cartId: req.session.cartId,
+          price: first.rows[0].price,
         };
       } else {
         const sql = `insert into "carts" ("cartId", "createdAt")
         values (default, default)
         returning "cartId"`;
-        return db.query(sql).then((result) => {
+        return db.query(sql).then((data) => {
           return {
-            cartId: result.rows[0].cartId,
-            price: data.rows[0].price,
+            cartId: data.rows[0].cartId,
+            price: first.rows[0].price,
           };
         });
       }
     })
-    .then((result) => {
-      cartId = result.cartId;
+    .then((second) => {
+      const { cartId, price } = second;
+      req.session["cartId"] = cartId;
       const sql = `insert into "cartItems" ("cartId", "productId", "price")
                         values ($1, $2, $3)
                      returning "cartItemId"`;
-      const values = [cartId, productId, result.price];
+      const values = [cartId, productId, price];
       return db.query(sql, values);
     })
     .then((result) => {
@@ -129,6 +136,7 @@ app.post("/api/cart", (req, res, next) => {
     .catch((err) => next(err));
 });
 
+// Place order
 app.post("/api/orders", (req, res, next) => {
   const cartId = req.session.cartId;
   if (!cartId) {
