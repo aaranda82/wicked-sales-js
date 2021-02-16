@@ -15,7 +15,11 @@ const Back = styled.div`
 `;
 
 interface IProps {
-  placeOrder: any;
+  placeOrder: (info: {
+    name: string;
+    creditCard: string;
+    shippingAddress: string;
+  }) => void;
   setView: (name: string, params: number | null) => void;
 }
 
@@ -36,6 +40,7 @@ class CheckoutForm extends Component<IProps, IState> {
     this.handleName = this.handleName.bind(this);
     this.handleCreditCard = this.handleCreditCard.bind(this);
     this.handleAddress = this.handleAddress.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleSubmit(e: React.FormEvent) {

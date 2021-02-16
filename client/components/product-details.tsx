@@ -52,14 +52,23 @@ const Price = styled.div`
   font-size: 40px;
 `;
 
+interface IProduct {
+  image: string;
+  name: string;
+  price: number;
+  productId: number;
+  shortDescription: string;
+  longDescription: string;
+  quantity: number;
+}
 interface IProps {
-  params: any;
+  params: number | null;
   setView: (name: string, params: number | null) => void;
-  addToCart: any;
+  addToCart: (product: IProduct) => void;
 }
 
 interface IState {
-  product: any;
+  product: IProduct | null;
 }
 
 class ProductDetails extends Component<IProps, IState> {
@@ -74,9 +83,6 @@ class ProductDetails extends Component<IProps, IState> {
     fetch(`/api/products/${this.props.params}`)
       .then((response) => response.json())
       .then((product) => {
-        const price = ("$" + product.price).split("");
-        price.splice(price.length - 2, 0, ".");
-        product.price = price.join("");
         return this.setState({ product });
       });
   }
@@ -86,7 +92,9 @@ class ProductDetails extends Component<IProps, IState> {
     const { setView, addToCart } = this.props;
 
     if (product) {
-      const { image, name, price, shortDescription, longDescription } = product;
+      const { image, name, shortDescription, longDescription } = product;
+      const formattedPrice = ("$" + product.price).split("");
+      formattedPrice.splice(formattedPrice.length - 2, 0, ".").join("");
       return (
         <ProductDetailPage>
           <Content>
@@ -98,7 +106,7 @@ class ProductDetails extends Component<IProps, IState> {
             <BasicInfo>
               <Name>{name}</Name>
               <Info>
-                Price:<Price>{price}</Price>
+                Price:<Price>{formattedPrice}</Price>
               </Info>
               <Info>{shortDescription}</Info>
               <button

@@ -2,11 +2,12 @@ import React from "react";
 import { ColorScheme } from "../ColorScheme";
 import styled from "styled-components";
 
-const { accent } = ColorScheme;
+const { accent, green } = ColorScheme;
 
 const Item = styled.div`
   cursor: pointer;
   border: 1px solid lightgrey;
+  border-radius: 10px;
   transition: all ease 0.2s;
   background-color: ${accent};
   padding: 0;
@@ -14,6 +15,12 @@ const Item = styled.div`
     z-index: 1;
     position: relative;
     transform: scale(1.05);
+  }
+`;
+
+const Name = styled.h5`
+  ${Item}: hover & {
+    color: ${green};
   }
 `;
 
@@ -41,10 +48,10 @@ function ProductListItem({ product, setView }: IProps) {
         alt={name}
         className="card-image-top"
         height="250vh"
-        style={{ borderRadius: "5px" }}
+        style={{ borderRadius: "10px" }}
       />
       <div className="card-body">
-        <h5 className="card-title">{name}</h5>
+        <Name className="card-title">{name}</Name>
         <div>{formattedPrice}</div>
         <p className="card-text">{shortDescription}</p>
       </div>

@@ -27,10 +27,6 @@ class ProductList extends Component<IProps, IState> {
   }
 
   componentDidMount() {
-    this.getProducts();
-  }
-
-  getProducts() {
     fetch("/api/products")
       .then((response) => response.json())
       .then((products) => this.setState({ products }))

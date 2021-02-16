@@ -38,11 +38,12 @@ interface IProps {
     price: number;
     productId: number;
     shortDescription: string;
+    quantity: number;
   };
 }
 
 function CartSummaryItem({ product }: IProps) {
-  const { price, image, name, shortDescription } = product;
+  const { price, image, name, shortDescription, quantity } = product;
   const priceMod = `$${(price / 100).toFixed(2)}`;
   return (
     <Card>
@@ -53,7 +54,7 @@ function CartSummaryItem({ product }: IProps) {
         <Sub width="60%">
           <H5>{name}</H5>
           <H5>{priceMod}</H5>
-          <Info></Info>
+          <Info>Qty: {quantity}</Info>
           <Info>{shortDescription}</Info>
         </Sub>
       </Container>

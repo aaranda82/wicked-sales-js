@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Header from "./header";
 import ProductList from "./product-list";
@@ -17,6 +17,17 @@ interface ICart {
   price: number;
   productId: number;
   shortDescription: string;
+  quantity: number;
+}
+
+interface IProduct {
+  quantity: number;
+  image: string;
+  name: string;
+  price: number;
+  productId: number;
+  shortDescription: string;
+  longDescription: string;
 }
 
 const App = () => {
@@ -29,7 +40,19 @@ const App = () => {
     setParams(params);
   };
 
-  const addToCart = (product: number) => {
+  useEffect(() => {
+    getCartItems();
+  }, []);
+
+  const getCartItems = () => {
+    fetch("/api/cart")
+      .then((response) => response.json())
+      .then((response) => {
+        setCart(response);
+      });
+  };
+
+  const addToCart = (product: IProduct) => {
     const addToCartInit = {
       method: "POST",
       headers: {
@@ -40,6 +63,13 @@ const App = () => {
     fetch("/api/cart", addToCartInit)
       .then((response) => response.json())
       .then((cartProduct) => {
+        console.log(cartProduct);
+        const itemIsInCart = cart.find(
+          ({ productId }) => productId === cartProduct.productId,
+        );
+        if (itemIsInCart && itemIsInCart.productId) {
+          return getCartItems();
+        }
         const newCart = [...cart, cartProduct];
         setCart(newCart);
       });
@@ -69,7 +99,11 @@ const App = () => {
     return domView;
   };
 
-  const placeOrder = (info: any) => {
+  const placeOrder = (info: {
+    name: string;
+    creditCard: string;
+    shippingAddress: string;
+  }) => {
     const placeOrderInit = {
       method: "POST",
       headers: {
@@ -79,7 +113,10 @@ const App = () => {
     };
     fetch("/api/orders", placeOrderInit)
       .then((response) => {
-        response.json();
+        return response.json();
+      })
+      .then((result) => {
+        console.log("Order Complete:", result);
         setName("catalog");
         setParams(null);
         setCart([]);
