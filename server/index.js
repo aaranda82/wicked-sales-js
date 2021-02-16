@@ -52,15 +52,14 @@ app.get("/api/products/:productId", (req, res, next) => {
     .catch((err) => next(err));
 });
 
-///
-///
-/// !!!!! API not in use
+// get cart info from session
 app.get("/api/cart", (req, res, next) => {
   if (!req.session.cartId) {
     return res.json([]);
   } else {
     const sql = `select "c"."cartItemId",
                         "c"."price",
+                        "c"."quantity",
                         "p"."productId",
                         "p"."image",
                         "p"."name",
@@ -88,11 +87,13 @@ app.post("/api/cart", (req, res, next) => {
   from "products"
   where "productId" = $1`;
   const val = [productId];
+  // Get price for prduct in DB
   db.query(sql, val)
     .then((first) => {
       if (first.rows.length === 0) {
         throw new ClientError(`Cannot find productId ${productId}`, 400);
       } else if (req.session.cartId) {
+        // If cart exists return cart info plus price
         return {
           cartId: req.session.cartId,
           price: first.rows[0].price,
@@ -102,8 +103,10 @@ app.post("/api/cart", (req, res, next) => {
         values (default, default)
         returning "cartId"`;
         return db.query(sql).then((data) => {
+          const { cartId } = data.rows[0];
+          req.session["cartId"] = cartId;
           return {
-            cartId: data.rows[0].cartId,
+            cartId,
             price: first.rows[0].price,
           };
         });
@@ -111,16 +114,33 @@ app.post("/api/cart", (req, res, next) => {
     })
     .then((second) => {
       const { cartId, price } = second;
-      req.session["cartId"] = cartId;
-      const sql = `insert into "cartItems" ("cartId", "productId", "price")
-                        values ($1, $2, $3)
-                     returning "cartItemId"`;
-      const values = [cartId, productId, price];
-      return db.query(sql, values);
+      // Check to see if cartItem is already in a cart
+      const s = `select * from "cartItems"
+      where "cartId" = $1
+      and "productId" = $2`;
+      const v = [cartId, productId];
+      return db.query(s, v).then((result) => {
+        if (result.rows.length) {
+          console.log("cart itme exists", result.rows);
+          const sql = `update "cartItems" 
+          set "quantity" = "quantity" + 1 
+          where "cartId" = $1 and "productId" = $2
+          returning "cartItemId"`;
+          const val = [cartId, productId];
+          return db.query(sql, val);
+        }
+        console.log("Add new cart Item");
+        const sql = `insert into "cartItems" ("cartId", "productId", "price", "quantity")
+                          values ($1, $2, $3, $4)
+                       returning "cartItemId"`;
+        const values = [cartId, productId, price, 1];
+        return db.query(sql, values);
+      });
     })
     .then((result) => {
       const sql = `select "c"."cartItemId",
                           "c"."price",
+                          "c"."quantity",
                           "p"."productId",
                           "p"."image",
                           "p"."name",

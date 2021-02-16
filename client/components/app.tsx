@@ -17,9 +17,11 @@ interface ICart {
   price: number;
   productId: number;
   shortDescription: string;
+  quantity: number;
 }
 
 interface IProduct {
+  quantity: number;
   image: string;
   name: string;
   price: number;
@@ -61,6 +63,13 @@ const App = () => {
     fetch("/api/cart", addToCartInit)
       .then((response) => response.json())
       .then((cartProduct) => {
+        console.log(cartProduct);
+        const itemIsInCart = cart.find(
+          ({ productId }) => productId === cartProduct.productId,
+        );
+        if (itemIsInCart && itemIsInCart.productId) {
+          return getCartItems();
+        }
         const newCart = [...cart, cartProduct];
         setCart(newCart);
       });

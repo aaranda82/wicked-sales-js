@@ -7,6 +7,7 @@ const { accent, green } = ColorScheme;
 const Item = styled.div`
   cursor: pointer;
   border: 1px solid lightgrey;
+  border-radius: 10px;
   transition: all ease 0.2s;
   background-color: ${accent};
   padding: 0;
@@ -47,7 +48,7 @@ function ProductListItem({ product, setView }: IProps) {
         alt={name}
         className="card-image-top"
         height="250vh"
-        style={{ borderRadius: "5px" }}
+        style={{ borderRadius: "10px" }}
       />
       <div className="card-body">
         <Name className="card-title">{name}</Name>

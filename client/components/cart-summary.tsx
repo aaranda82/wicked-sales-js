@@ -23,6 +23,7 @@ interface IProps {
     price: number;
     productId: number;
     shortDescription: string;
+    quantity: number;
   }[];
 }
 
@@ -41,7 +42,10 @@ function CartSummary({ setView, cartItems }: IProps) {
     const cartItemArr = cartItems.map((i, key) => (
       <CartSummaryItem product={i} key={key} />
     ));
-    const cartTotal = cartItems.reduce((acc, cur) => acc + cur.price, 0);
+    const cartTotal = cartItems.reduce(
+      (acc, cur) => acc + cur.price * cur.quantity,
+      0,
+    );
     const total = `$${(cartTotal / 100).toFixed(2)}`;
     return (
       <>

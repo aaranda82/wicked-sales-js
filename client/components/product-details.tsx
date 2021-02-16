@@ -59,6 +59,7 @@ interface IProduct {
   productId: number;
   shortDescription: string;
   longDescription: string;
+  quantity: number;
 }
 interface IProps {
   params: number | null;
