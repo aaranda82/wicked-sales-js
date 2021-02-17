@@ -66,7 +66,8 @@ app.get("/api/cart", (req, res, next) => {
                         "p"."shortDescription"
                    from "cartItems" as "c"
                    join "products" as "p" using ("productId")
-                  where "c"."cartId" = $1`;
+                  where "c"."cartId" = $1
+                  order by "cartItemId"`;
     const val = [req.session.cartId];
     db.query(sql, val)
       .then((result) => res.json(result.rows))
@@ -75,7 +76,7 @@ app.get("/api/cart", (req, res, next) => {
 });
 
 // Add prodcut to cart
-app.post("/api/cart", (req, res, next) => {
+app.post("/api/add_to_cart", (req, res, next) => {
   const { productId } = req.body;
   if (!productId) {
     next(new ClientError('"productId" is required', 400));
@@ -121,7 +122,6 @@ app.post("/api/cart", (req, res, next) => {
       const v = [cartId, productId];
       return db.query(s, v).then((result) => {
         if (result.rows.length) {
-          console.log("cart itme exists", result.rows);
           const sql = `update "cartItems" 
           set "quantity" = "quantity" + 1 
           where "cartId" = $1 and "productId" = $2
@@ -129,7 +129,6 @@ app.post("/api/cart", (req, res, next) => {
           const val = [cartId, productId];
           return db.query(sql, val);
         }
-        console.log("Add new cart Item");
         const sql = `insert into "cartItems" ("cartId", "productId", "price", "quantity")
                           values ($1, $2, $3, $4)
                        returning "cartItemId"`;
@@ -154,6 +153,38 @@ app.post("/api/cart", (req, res, next) => {
       });
     })
     .catch((err) => next(err));
+});
+
+app.post("/api/remove_from_cart", (req, res, next) => {
+  const { cartId } = req.session;
+  const { productId } = req.body;
+  const s = `select * from "cartItems"
+            where "cartId" = $1 
+            and "productId" = $2`;
+  const v = [cartId, productId];
+  db.query(s, v)
+    .then((first) => {
+      if (first.rows[0].quantity > 1) {
+        const sql = `update "cartItems" 
+          set "quantity" = "quantity" - 1 
+          where "cartId" = $1 and "productId" = $2
+          returning "quantity", "productId"`;
+        const val = [cartId, productId];
+        return db.query(sql, val);
+      }
+      const sql = `delete from "cartItems"
+                   where "productId" = $1`;
+      const val = [productId];
+      return db.query(sql, val);
+    })
+    .then((result) => {
+      if (result.rows.length) {
+        res.status(201).json(result.rows[0]);
+      } else {
+        res.status(201).json({ productId, quantity: 0 });
+      }
+    })
+    .catch((error) => next(error));
 });
 
 // Place order

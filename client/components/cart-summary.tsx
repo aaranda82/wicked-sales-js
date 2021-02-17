@@ -16,6 +16,8 @@ const Back = styled.div`
 `;
 
 interface IProps {
+  addToCart: (prodId: { productId: number }) => void;
+  removeFromCart: (prodId: { productId: number }) => void;
   setView: (name: string, params: number | null) => void;
   cartItems: {
     image: string;
@@ -27,7 +29,12 @@ interface IProps {
   }[];
 }
 
-function CartSummary({ setView, cartItems }: IProps) {
+function CartSummary({
+  setView,
+  cartItems,
+  addToCart,
+  removeFromCart,
+}: IProps) {
   if (!cartItems.length) {
     return (
       <>
@@ -40,7 +47,12 @@ function CartSummary({ setView, cartItems }: IProps) {
     );
   } else {
     const cartItemArr = cartItems.map((i, key) => (
-      <CartSummaryItem product={i} key={key} />
+      <CartSummaryItem
+        product={i}
+        key={key}
+        addToCart={addToCart}
+        removeFromCart={removeFromCart}
+      />
     ));
     const cartTotal = cartItems.reduce(
       (acc, cur) => acc + cur.price * cur.quantity,
