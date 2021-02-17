@@ -6,10 +6,6 @@ const Container = styled.div`
   color: white;
 `;
 
-interface IProps {
-  setView: (name: string, params: number | null) => void;
-}
-
 interface IState {
   products: {
     image: string;
@@ -20,8 +16,8 @@ interface IState {
   }[];
 }
 
-class ProductList extends Component<IProps, IState> {
-  constructor(props: IProps) {
+class ProductList extends Component<{}, IState> {
+  constructor(props: {}) {
     super(props);
     this.state = { products: [] };
   }
@@ -36,13 +32,7 @@ class ProductList extends Component<IProps, IState> {
   generateItems() {
     if (this.state.products.length > 0) {
       const productArray = this.state.products.map((index) => {
-        return (
-          <ProductListItem
-            product={index}
-            key={index.productId}
-            setView={this.props.setView}
-          />
-        );
+        return <ProductListItem product={index} key={index.productId} />;
       });
       return productArray;
     }

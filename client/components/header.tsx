@@ -1,18 +1,20 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { ColorScheme } from "../ColorScheme";
+import { colorScheme } from "../colorScheme";
 
 const Nav = styled.nav`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  background-color: ${ColorScheme.accent};
+  background-color: ${colorScheme.accent};
 `;
 const Logo = styled.div`
   width: 60%;
   font-size: 40px;
 `;
-const Cart = styled.div`
+const Cart = styled(Link)`
+  color: ${colorScheme.text};
   cursor: pointer;
   width: 19%;
   text-align: right;
@@ -20,20 +22,16 @@ const Cart = styled.div`
   justify-content: flex-end;
   align-items: center;
   &:hover {
-    color: ${ColorScheme.green};
+    color: ${colorScheme.green};
+    text-decoration: none;
   }
 `;
 
-interface IProps {
-  setView: (name: string, params: number | null) => void;
-  cartItemCount: number;
-}
-
-function Header({ setView, cartItemCount }: IProps) {
+function Header({ cartItemCount }: { cartItemCount: number }) {
   return (
     <Nav>
       <Logo>E-Commerce Site</Logo>
-      <Cart onClick={() => setView("cart", null)}>
+      <Cart to="/cart">
         {cartItemCount} items <i className="fas fa-shopping-cart"></i>
       </Cart>
     </Nav>
