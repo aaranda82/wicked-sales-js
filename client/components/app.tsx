@@ -27,7 +27,7 @@ interface IProduct {
   price: number;
   productId: number;
   shortDescription: string;
-  longDescription: string;
+  cartItemId: number;
 }
 
 const App = () => {
@@ -48,22 +48,24 @@ const App = () => {
     fetch("/api/cart")
       .then((response) => response.json())
       .then((response) => {
+        response.sort(
+          (a: IProduct, b: IProduct) => a.cartItemId - b.cartItemId,
+        );
         setCart(response);
       });
   };
 
-  const addToCart = (product: IProduct) => {
+  const addToCart = (productId: { productId: number }) => {
     const addToCartInit = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(product),
+      body: JSON.stringify(productId),
     };
-    fetch("/api/cart", addToCartInit)
+    fetch("/api/add_to_cart", addToCartInit)
       .then((response) => response.json())
       .then((cartProduct) => {
-        console.log(cartProduct);
         const itemIsInCart = cart.find(
           ({ productId }) => productId === cartProduct.productId,
         );
@@ -71,6 +73,30 @@ const App = () => {
           return getCartItems();
         }
         const newCart = [...cart, cartProduct];
+        setCart(newCart);
+      });
+  };
+
+  const removeFromCart = (productId: { productId: number }) => {
+    const init = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(productId),
+    };
+    fetch("/api/remove_from_cart", init)
+      .then((res) => res.json())
+      .then((res) => {
+        const index = cart.findIndex(
+          (item) => item.productId === res.productId,
+        );
+        const newCart = [...cart];
+        if (res.quantity === 0) {
+          newCart.splice(index, 1);
+        } else {
+          newCart[index].quantity = res.quantity;
+        }
         setCart(newCart);
       });
   };
@@ -91,7 +117,14 @@ const App = () => {
         );
         break;
       case "cart":
-        domView = <CartSummary setView={setView} cartItems={cart} />;
+        domView = (
+          <CartSummary
+            setView={setView}
+            cartItems={cart}
+            addToCart={addToCart}
+            removeFromCart={removeFromCart}
+          />
+        );
         break;
       case "checkout":
         domView = <CheckoutForm setView={setView} placeOrder={placeOrder} />;
@@ -125,9 +158,13 @@ const App = () => {
       .catch((err) => console.error(err));
   };
 
+  const handleCartQty = () => {
+    return cart.reduce((acc, cur) => acc + cur.quantity, 0);
+  };
+
   return (
     <>
-      <Header cartItemCount={cart.length} setView={setView} />
+      <Header cartItemCount={handleCartQty()} setView={setView} />
       <Main>{handleRender()}</Main>
     </>
   );

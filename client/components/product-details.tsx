@@ -64,7 +64,7 @@ interface IProduct {
 interface IProps {
   params: number | null;
   setView: (name: string, params: number | null) => void;
-  addToCart: (product: IProduct) => void;
+  addToCart: (prodId: { productId: number }) => void;
 }
 
 interface IState {
@@ -92,7 +92,13 @@ class ProductDetails extends Component<IProps, IState> {
     const { setView, addToCart } = this.props;
 
     if (product) {
-      const { image, name, shortDescription, longDescription } = product;
+      const {
+        image,
+        name,
+        shortDescription,
+        longDescription,
+        productId,
+      } = product;
       const formattedPrice = ("$" + product.price).split("");
       formattedPrice.splice(formattedPrice.length - 2, 0, ".").join("");
       return (
@@ -111,7 +117,7 @@ class ProductDetails extends Component<IProps, IState> {
               <Info>{shortDescription}</Info>
               <button
                 className="btn btn-primary"
-                onClick={() => addToCart(product)}>
+                onClick={() => addToCart({ productId })}>
                 Add to Cart
               </button>
             </BasicInfo>
