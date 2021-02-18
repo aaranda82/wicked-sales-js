@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import styled from "styled-components";
 import Header from "./header";
 import ProductList from "./product-list";
@@ -31,14 +32,7 @@ interface IProduct {
 }
 
 const App = () => {
-  const [name, setName] = useState<string>("catalog");
-  const [params, setParams] = useState<number | null>(null);
   const [cart, setCart] = useState<ICart[]>([]);
-
-  const setView = (name: string, params: number | null) => {
-    setName(name);
-    setParams(params);
-  };
 
   useEffect(() => {
     getCartItems();
@@ -101,37 +95,6 @@ const App = () => {
       });
   };
 
-  const handleRender = () => {
-    let domView = null;
-    switch (name) {
-      case "catalog":
-        domView = <ProductList setView={setView} />;
-        break;
-      case "details":
-        domView = (
-          <ProductDetails
-            setView={setView}
-            addToCart={addToCart}
-            params={params}
-          />
-        );
-        break;
-      case "cart":
-        domView = (
-          <CartSummary
-            setView={setView}
-            cartItems={cart}
-            addToCart={addToCart}
-            removeFromCart={removeFromCart}
-          />
-        );
-        break;
-      case "checkout":
-        domView = <CheckoutForm setView={setView} placeOrder={placeOrder} />;
-    }
-    return domView;
-  };
-
   const placeOrder = (info: {
     name: string;
     creditCard: string;
@@ -150,8 +113,6 @@ const App = () => {
       })
       .then((result) => {
         console.log("Order Complete:", result);
-        setName("catalog");
-        setParams(null);
         setCart([]);
         return false;
       })
@@ -164,8 +125,29 @@ const App = () => {
 
   return (
     <>
-      <Header cartItemCount={handleCartQty()} setView={setView} />
-      <Main>{handleRender()}</Main>
+      <Router>
+        <Header cartItemCount={handleCartQty()} />
+        <Main>
+          <Switch>
+            <Route path="/checkout">
+              <CheckoutForm placeOrder={placeOrder} />
+            </Route>
+            <Route path="/cart">
+              <CartSummary
+                cartItems={cart}
+                addToCart={addToCart}
+                removeFromCart={removeFromCart}
+              />
+            </Route>
+            <Route path="/detail/:id">
+              <ProductDetails addToCart={addToCart} />
+            </Route>
+            <Route path="/">
+              <ProductList />
+            </Route>
+          </Switch>
+        </Main>
+      </Router>
     </>
   );
 };

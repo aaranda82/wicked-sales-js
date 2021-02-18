@@ -1,6 +1,7 @@
-export const ColorScheme = {
+export const colorScheme = {
   background: "#252525",
   accent: "#303030",
+  text: "#bdbdbd",
   grey: "#576574",
   lightGrey: "#c8d6e5",
   green: "#10ac84",

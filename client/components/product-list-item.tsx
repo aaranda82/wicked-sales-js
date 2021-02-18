@@ -1,10 +1,12 @@
 import React from "react";
-import { ColorScheme } from "../ColorScheme";
+import { colorScheme } from "../colorScheme";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
-const { accent, green } = ColorScheme;
+const { accent, green, text } = colorScheme;
 
-const Item = styled.div`
+const Item = styled(Link)`
+  color: ${text};
   cursor: pointer;
   border: 1px solid lightgrey;
   border-radius: 10px;
@@ -15,6 +17,8 @@ const Item = styled.div`
     z-index: 1;
     position: relative;
     transform: scale(1.05);
+    color: ${text};
+    text-decoration: none;
   }
 `;
 
@@ -32,17 +36,13 @@ interface IProps {
     productId: number;
     shortDescription: string;
   };
-  setView: (name: string, params: number | null) => void;
 }
 
-function ProductListItem({ product, setView }: IProps) {
+function ProductListItem({ product }: IProps) {
   const { price, productId, image, name, shortDescription } = product;
   const formattedPrice = `$${(price / 100).toFixed(2)}`;
   return (
-    <Item
-      className="card col-3 m-3"
-      onClick={() => setView("details", productId)}
-      title={name}>
+    <Item to={`/detail/${productId}`} className="card col-3 m-3" title={name}>
       <img
         src={image}
         alt={name}
@@ -52,6 +52,7 @@ function ProductListItem({ product, setView }: IProps) {
       />
       <div className="card-body">
         <Name className="card-title">{name}</Name>
+
         <div>{formattedPrice}</div>
         <p className="card-text">{shortDescription}</p>
       </div>

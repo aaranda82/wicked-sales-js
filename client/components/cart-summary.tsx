@@ -1,24 +1,16 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import CartSummaryItem from "./cart-summary-item";
 import styled from "styled-components";
-import { ColorScheme } from "../ColorScheme";
+import { BackButton } from "./BackButton";
 
-const { red, green } = ColorScheme;
-
-const Back = styled.div`
-  cursor: pointer;
-  font-size: 40px;
-  color: ${red};
-
-  &:hover {
-    color: ${green};
-  }
+const Container = styled.div`
+  margin: 20px 0;
 `;
 
 interface IProps {
   addToCart: (prodId: { productId: number }) => void;
   removeFromCart: (prodId: { productId: number }) => void;
-  setView: (name: string, params: number | null) => void;
   cartItems: {
     image: string;
     name: string;
@@ -29,19 +21,11 @@ interface IProps {
   }[];
 }
 
-function CartSummary({
-  setView,
-  cartItems,
-  addToCart,
-  removeFromCart,
-}: IProps) {
+function CartSummary({ cartItems, addToCart, removeFromCart }: IProps) {
   if (!cartItems.length) {
     return (
       <>
-        <Back
-          title="Back to Catalog"
-          className="fas fa-arrow-circle-left"
-          onClick={() => setView("catalog", null)}></Back>
+        <BackButton name="BACK TO CATALOG" />
         <h5>Cart Empty</h5>
       </>
     );
@@ -60,20 +44,15 @@ function CartSummary({
     );
     const total = `$${(cartTotal / 100).toFixed(2)}`;
     return (
-      <>
-        <Back
-          title="Back to Catalog"
-          className="fas fa-arrow-circle-left"
-          onClick={() => setView("catalog", null)}></Back>
+      <Container>
+        <BackButton name="KEEP SHOPPING" />
         <h1>My Cart</h1>
         <div className="container">{cartItemArr}</div>
         <h3>{`Cart Total: ${total}`}</h3>
-        <button
-          className="btn btn-primary col-2"
-          onClick={() => setView("checkout", null)}>
-          checkout
-        </button>
-      </>
+        <Link to="/checkout">
+          <button className="btn btn-primary col-2">checkout</button>
+        </Link>
+      </Container>
     );
   }
 }

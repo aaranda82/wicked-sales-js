@@ -1,9 +1,12 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { ColorScheme } from "../ColorScheme";
+import { colorScheme } from "../colorScheme";
 
 const Card = styled.div`
-  background-color: ${ColorScheme.accent};
+  background-color: ${colorScheme.accent};
+  border-radius: 10px;
+  margin: 5px;
 `;
 
 const Container = styled.div`
@@ -21,18 +24,35 @@ const Sub = styled(Container)<{ width: string }>`
   }
 `;
 
-const Qty = styled(Container)`
-  width: 100%;
+const Qty = styled(Container)<{ qty?: boolean }>`
+  width: ${(props) => (props.qty ? "25%" : "100%")};
 `;
 
 const Info = styled.p`
-  width: 75%;
+  width: 100%;
   text-align: center;
+  padding: 10px;
 `;
 
-const H5 = styled.h5`
+const H5 = styled.h4`
   text-align: center;
   width: 30%;
+`;
+
+const Icon = styled.i`
+  color: ${colorScheme.green};
+`;
+
+const Button = styled.button`
+  border: 1px solid ${colorScheme.text};
+  background: transparent;
+  border-radius: 10px;
+  &: hover {
+    background: ${colorScheme.text};
+  }
+  &: focus {
+    outline: none;
+  }
 `;
 
 interface IProps {
@@ -55,19 +75,21 @@ function CartSummaryItem({ product, addToCart, removeFromCart }: IProps) {
     <Card>
       <Container>
         <Sub width="40%">
-          <img src={image} alt={name} height="150vh" />
+          <Link to={`/detail/${productId}`}>
+            <img src={image} alt={name} height="150vh" />
+          </Link>
         </Sub>
         <Sub width="60%">
           <H5>{name}</H5>
           <H5>{priceMod}</H5>
           <Qty>
-            <button onClick={() => removeFromCart({ productId })}>
-              <i className="fas fa-minus" />
-            </button>
-            <Info>Qty: {quantity}</Info>
-            <button onClick={() => addToCart({ productId })}>
-              <i className="fas fa-plus" />
-            </button>
+            <Button onClick={() => removeFromCart({ productId })}>
+              <Icon className="fas fa-minus" />
+            </Button>
+            <Qty qty>Qty: {quantity}</Qty>
+            <Button onClick={() => addToCart({ productId })}>
+              <Icon className="fas fa-plus" />
+            </Button>
           </Qty>
           <Info>{shortDescription}</Info>
         </Sub>
