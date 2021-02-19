@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { Switch, Route, useHistory } from "react-router-dom";
 import styled from "styled-components";
 import Header from "./header";
 import ProductList from "./product-list";
@@ -33,7 +33,7 @@ interface IProduct {
 
 const App = () => {
   const [cart, setCart] = useState<ICart[]>([]);
-
+  const history = useHistory();
   useEffect(() => {
     getCartItems();
   }, []);
@@ -117,6 +117,8 @@ const App = () => {
         return false;
       })
       .catch((err) => console.error(err));
+    window.alert("Order Complete");
+    history.push("/");
   };
 
   const handleCartQty = () => {
@@ -125,29 +127,27 @@ const App = () => {
 
   return (
     <>
-      <Router>
-        <Header cartItemCount={handleCartQty()} />
-        <Main>
-          <Switch>
-            <Route path="/checkout">
-              <CheckoutForm placeOrder={placeOrder} />
-            </Route>
-            <Route path="/cart">
-              <CartSummary
-                cartItems={cart}
-                addToCart={addToCart}
-                removeFromCart={removeFromCart}
-              />
-            </Route>
-            <Route path="/detail/:id">
-              <ProductDetails addToCart={addToCart} />
-            </Route>
-            <Route path="/">
-              <ProductList />
-            </Route>
-          </Switch>
-        </Main>
-      </Router>
+      <Header cartItemCount={handleCartQty()} />
+      <Main>
+        <Switch>
+          <Route path="/checkout">
+            <CheckoutForm placeOrder={placeOrder} />
+          </Route>
+          <Route path="/cart">
+            <CartSummary
+              cartItems={cart}
+              addToCart={addToCart}
+              removeFromCart={removeFromCart}
+            />
+          </Route>
+          <Route path="/detail/:id">
+            <ProductDetails addToCart={addToCart} />
+          </Route>
+          <Route path="/">
+            <ProductList />
+          </Route>
+        </Switch>
+      </Main>
     </>
   );
 };
