@@ -189,14 +189,18 @@ app.post("/api/remove_from_cart", (req, res, next) => {
 
 // Place order
 app.post("/api/orders", (req, res, next) => {
-  const cartId = req.session.cartId;
+  const { cartId } = req.session;
   if (!cartId) {
+    console.log("no cart Id stored");
     next(new ClientError("no cart id stored", 400));
   } else if (!req.body.name) {
-    next(new ClientError("A name is required", 400));
+    console.log("no name");
+    next();
   } else if (!req.body.creditCard) {
+    console.log("no Credit Card");
     next(new ClientError("A credit card number is required", 400));
   } else if (!req.body.shippingAddress) {
+    console.log("no Address");
     return next(new ClientError("A shipping address is required", 400));
   }
   const sql = `insert into "orders" ("cartId", "name", "creditCard", "shippingAddress")
